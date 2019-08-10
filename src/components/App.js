@@ -5,6 +5,7 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom'
+import styled from 'styled-components'
 
 import CreateLink from './Link/CreateLink'
 import Login from './Auth/Login'
@@ -17,9 +18,9 @@ import Header from './Header'
 function App() {
   return (
     <Router>
-      <div className="app-container">
+      <AppContainer>
         <Header />
-        <div className="route-container">
+        <RouteContainer>
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/new/1" />} />
             <Route path="/create" component={CreateLink} />
@@ -30,10 +31,24 @@ function App() {
             <Route path="/new/:page" component={LinkList} />
             <Route path="/link/:linkId" component={LinkDetail} />
           </Switch>
-        </div>
-      </div>
+        </RouteContainer>
+      </AppContainer>
     </Router>
   )
 }
+
+const AppContainer = styled.div`
+  width: 85%;
+  margin-right: auto;
+  margin-left: auto;
+`
+
+const RouteContainer = styled.div`
+  background-color: rgb(246, 246, 239);
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+`
 
 export default App
