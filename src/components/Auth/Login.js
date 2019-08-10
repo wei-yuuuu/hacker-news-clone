@@ -1,24 +1,53 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import useFormValidation from '../../hooks/useFormValidation'
+
+const INITIAL_STATE = {
+  name: '',
+  email: '',
+  password: ''
+}
+
 function Login() {
+  const { values, handleSubmit, handleChange } = useFormValidation(
+    INITIAL_STATE
+  )
   const [login, setLogin] = React.useState(true)
   const handleToggle = () => setLogin(prevLogin => !prevLogin)
+
   return (
     <>
       <LoginTitle>{login ? 'Login' : 'Create Account'}</LoginTitle>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         {!login && (
-          <input type="text" placeholder="Your name" autoComplete="off" />
+          <input
+            type="text"
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+            placeholder="Your name"
+            autoComplete="off"
+          />
         )}
-        <input type="email" placeholder="Your email" autoComplete="off" />
+        <input
+          type="email"
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+          placeholder="Your email"
+          autoComplete="off"
+        />
         <input
           type="password"
+          name="password"
+          value={values.password}
+          onChange={handleChange}
           placeholder="Choose a secure password"
           autoComplete="off"
         />
         <ButtonContainer>
-          <Button type="button">Submit</Button>
+          <Button type="submit">Submit</Button>
           <Button type="button" onClick={handleToggle}>
             {login ? 'Need to create an account' : 'Already have an account?'}
           </Button>
