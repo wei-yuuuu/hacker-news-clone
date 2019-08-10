@@ -98,20 +98,29 @@ input {
   .flex {
     display: block;
   }
+  .flex .logo {
+    margin-top: 7px;
+  }
   .container {
     position: relative;
     margin-left: 24px;
-    margin-top: -0.5rem;
+    margin-top: -0.9rem;
   }
   .divider {
-    display: none;
+    display: inline-block;
   }
   .login {
-    margin-top: 0.9rem;
+    margin-top: 1rem;
   }
   .header-title {
     position: absolute;
     margin-left: 0.25rem;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .divider {
+    display: none;
   }
 }
 
