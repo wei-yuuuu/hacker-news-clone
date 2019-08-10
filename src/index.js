@@ -4,7 +4,7 @@ import { createGlobalStyle } from 'styled-components'
 import * as serviceWorker from './serviceWorker'
 
 import App from './components/App'
-/* import './styles/index.css' */
+import './styles/index.css'
 
 const GlobalStyle = createGlobalStyle`
   body {
