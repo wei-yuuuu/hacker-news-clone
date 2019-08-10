@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import useFormValidation from '../../hooks/useFormValidation'
+import validateLogin from '../Auth/validateLogin'
 
 const INITIAL_STATE = {
   name: '',
@@ -10,9 +11,14 @@ const INITIAL_STATE = {
 }
 
 function Login() {
-  const { values, handleSubmit, handleChange } = useFormValidation(
-    INITIAL_STATE
-  )
+  const {
+    values,
+    errors,
+    isSubmitting,
+    handleChange,
+    handleSubmit,
+    handleBlur
+  } = useFormValidation(INITIAL_STATE, validateLogin)
   const [login, setLogin] = React.useState(true)
   const handleToggle = () => setLogin(prevLogin => !prevLogin)
 
@@ -30,24 +36,35 @@ function Login() {
             autoComplete="off"
           />
         )}
-        <input
+        <Input
           type="email"
           name="email"
           value={values.email}
           onChange={handleChange}
           placeholder="Your email"
           autoComplete="off"
+          errors={errors.email}
         />
-        <input
+        {errors.email && <ErrorText>{errors.email}</ErrorText>}
+        <Input
           type="password"
           name="password"
           value={values.password}
           onChange={handleChange}
+          onBlur={handleBlur}
           placeholder="Choose a secure password"
           autoComplete="off"
+          errors={errors.password}
         />
+        {errors.password && <ErrorText>{errors.password}</ErrorText>}
         <ButtonContainer>
-          <Button type="submit">Submit</Button>
+          <SubmitButton
+            type="submit"
+            disabled={isSubmitting}
+            isSubmitting={isSubmitting}
+          >
+            Submit
+          </SubmitButton>
           <Button type="button" onClick={handleToggle}>
             {login ? 'Need to create an account' : 'Already have an account?'}
           </Button>
@@ -84,6 +101,22 @@ const Button = styled.button`
 const ButtonContainer = styled.div`
   display: flex;
   margin-top: 1rem;
+`
+
+const Input = styled.input`
+  border: ${props => props.errors && `1.5px solid rgba(255, 0, 0, 0.6)`};
+  border-radius: ${props => props.errors && `3px`};
+`
+
+const ErrorText = styled.p`
+  margin: 0.25em 0 0.5em 0;
+  padding: 0;
+  color: red;
+  font-style: bold;
+`
+
+const SubmitButton = styled(Button)`
+  background: ${props => (props.isSubmitting ? 'grey' : 'orange')};
 `
 
 export default Login
