@@ -1,2 +1,8 @@
-node_modules/
+# firebase config
+/src/firebase/config.js
+
+# dependencies
+/node_modules
+
+# misc
 .DS_Store
