@@ -22,13 +22,19 @@ function Login() {
   } = useFormValidation(INITIAL_STATE, validateLogin, authenticateUser)
 
   const [login, setLogin] = React.useState(true)
+  const [firebaseError, setFirebaseError] = React.useState(null)
+
   const handleToggle = () => setLogin(prevLogin => !prevLogin)
   async function authenticateUser() {
     const { name, email, password } = values
-    const response = login
-      ? await firebase.login(email, password)
-      : await firebase.register(name, email, password)
-    console.log(response)
+    try {
+      const response = login
+        ? await firebase.login(email, password)
+        : await firebase.register(name, email, password)
+    } catch (err) {
+      console.log(err)
+      setFirebaseError(err.message)
+    }
   }
 
   return (
@@ -66,6 +72,7 @@ function Login() {
           errors={errors.password}
         />
         {errors.password && <ErrorText>{errors.password}</ErrorText>}
+        {firebaseError && <ErrorText>{firebaseError}<ErrorText>}
         <ButtonContainer>
           <SubmitButton
             type="submit"
