@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import useFormValidation from '../../hooks/useFormValidation'
 import validateLogin from '../Auth/validateLogin'
+import firebase from '../../firebase'
 
 const INITIAL_STATE = {
   name: '',
@@ -18,9 +19,17 @@ function Login() {
     handleChange,
     handleSubmit,
     handleBlur
-  } = useFormValidation(INITIAL_STATE, validateLogin)
+  } = useFormValidation(INITIAL_STATE, validateLogin, authenticateUser)
+
   const [login, setLogin] = React.useState(true)
   const handleToggle = () => setLogin(prevLogin => !prevLogin)
+  async function authenticateUser() {
+    const { name, email, password } = values
+    const response = login
+      ? await firebase.login(email, password)
+      : await firebase.register(name, email, password)
+    console.log(response)
+  }
 
   return (
     <>
