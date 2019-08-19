@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   password: ''
 }
 
-function Login() {
+function Login(props) {
   const {
     values,
     errors,
@@ -31,6 +31,7 @@ function Login() {
       const response = login
         ? await firebase.login(email, password)
         : await firebase.register(name, email, password)
+      props.history.push('/')
     } catch (err) {
       console.log(err)
       setFirebaseError(err.message)
@@ -72,7 +73,7 @@ function Login() {
           errors={errors.password}
         />
         {errors.password && <ErrorText>{errors.password}</ErrorText>}
-        {firebaseError && <ErrorText>{firebaseError}<ErrorText>}
+        {firebaseError && <ErrorText>{firebaseError}</ErrorText>}
         <ButtonContainer>
           <SubmitButton
             type="submit"
