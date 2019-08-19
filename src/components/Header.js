@@ -2,7 +2,11 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { FirebaseContext } from '../firebase'
+
 function Header() {
+  const { user, firebase } = React.useContext(FirebaseContext)
+
   return (
     <HeaderContainer>
       <HeaderLeft>
@@ -19,7 +23,15 @@ function Header() {
         </LinkContainer>
       </HeaderLeft>
       <HeaderRight>
-        <LinkHeader to="/login">login</LinkHeader>
+        {user ? (
+          <>
+            <UserName>{user.displayName}</UserName>
+            <Divider>|</Divider>
+            <LogoutButton>logout</LogoutButton>
+          </>
+        ) : (
+          <LinkHeader to="/login">login</LinkHeader>
+        )}
       </HeaderRight>
     </HeaderContainer>
   )
@@ -81,11 +93,32 @@ const HeaderRight = styled.div`
     margin-top: 1rem;
   }
 `
+
 const Divider = styled.div`
   margin-left: 0.25rem;
   color: black;
   @media (max-width: 350px) {
     display: none;
+  }
+`
+
+const UserName = styled.div`
+  color: black;
+  text-decoration: none;
+  @media (max-width: 500px) {
+    position: absolute;
+    margin-top: -1rem;
+    margin-left: 1rem;
+  }
+`
+
+const LogoutButton = styled.div`
+  margin-left: 0.25rem;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  @media (max-width: 500px) {
+    margin-right: 1rem;
   }
 `
 
