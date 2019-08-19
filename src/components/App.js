@@ -3,36 +3,43 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
+  Redirect
 } from 'react-router-dom'
 import styled from 'styled-components'
 
-import CreateLink from './Link/CreateLink'
 import Login from './Auth/Login'
 import ForgotPassword from './Auth/ForgotPassword'
+import CreateLink from './Link/CreateLink'
 import SearchLink from './Link/SearchLinks'
 import LinkList from './Link/LinkList'
 import LinkDetail from './Link/LinkDetail'
 import Header from './Header'
 
+import useAuth from '../hooks/useAuth'
+import firebase, { FirebaseContext } from '../firebase'
+
 function App() {
+  const user = useAuth()
+
   return (
     <Router>
-      <AppContainer>
-        <Header />
-        <RouteContainer>
-          <Switch>
-            <Route exact path="/" render={() => <Redirect to="/new/1" />} />
-            <Route path="/create" component={CreateLink} />
-            <Route path="/login" component={Login} />
-            <Route path="/forgot" component={ForgotPassword} />
-            <Route path="/search" component={SearchLink} />
-            <Route path="/top" component={LinkList} />
-            <Route path="/new/:page" component={LinkList} />
-            <Route path="/link/:linkId" component={LinkDetail} />
-          </Switch>
-        </RouteContainer>
-      </AppContainer>
+      <FirebaseContext.Provider value={{ user, firebase }}>
+        <AppContainer>
+          <Header />
+          <RouteContainer>
+            <Switch>
+              <Route exact path="/" render={() => <Redirect to="/new/1" />} />
+              <Route path="/create" component={CreateLink} />
+              <Route path="/login" component={Login} />
+              <Route path="/forgot" component={ForgotPassword} />
+              <Route path="/search" component={SearchLink} />
+              <Route path="/top" component={LinkList} />
+              <Route path="/new/:page" component={LinkList} />
+              <Route path="/link/:linkId" component={LinkDetail} />
+            </Switch>
+          </RouteContainer>
+        </AppContainer>
+      </FirebaseContext.Provider>
     </Router>
   )
 }
