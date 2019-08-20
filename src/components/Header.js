@@ -18,8 +18,12 @@ function Header() {
           <LinkHeader to="/top">top</LinkHeader>
           <Divider>|</Divider>
           <LinkHeader to="/search">search</LinkHeader>
-          <Divider>|</Divider>
-          <LinkHeader to="/create">submit</LinkHeader>
+          {user && (
+            <>
+              <Divider>|</Divider>
+              <LinkHeader to="/create">submit</LinkHeader>
+            </>
+          )}
         </LinkContainer>
       </HeaderLeft>
       <HeaderRight>
@@ -27,7 +31,9 @@ function Header() {
           <>
             <UserName>{user.displayName}</UserName>
             <Divider>|</Divider>
-            <LogoutButton>logout</LogoutButton>
+            <LogoutButton onClick={() => firebase.logout()}>
+              logout
+            </LogoutButton>
           </>
         ) : (
           <LinkHeader to="/login">login</LinkHeader>
