@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 import useFormValidation from '../../hooks/useFormValidation'
 import validateLogin from '../Auth/validateLogin'
@@ -87,6 +88,7 @@ function Login(props) {
           </Button>
         </ButtonContainer>
       </Form>
+      <ForgotPassword to="/forgot">Forgot Password?</ForgotPassword>
     </>
   )
 }
@@ -134,6 +136,13 @@ const ErrorText = styled.p`
 
 const SubmitButton = styled(Button)`
   background: ${props => (props.isSubmitting ? 'grey' : 'orange')};
+`
+
+const ForgotPassword = styled(Link)`
+  padding: 1em 0;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
 `
 
 export default Login
