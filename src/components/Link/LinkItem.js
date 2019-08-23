@@ -1,21 +1,40 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 
 import { getDomain } from '../../utils'
+import FirebaseContext from '../../firebase/context'
 
-function LinkItem({ link, index, showCount }) {
+function LinkItem({ link, index, showCount, history }) {
+  const { firebase, user } = React.useContext(FirebaseContext)
+
+  async function handleVote() {
+    if (!user) {
+      history.push('/login')
+    } else {
+      const voteRef = firebase.db.collection('links').doc(link.id)
+      const doc = await voteRef.get()
+
+      if (doc.exists) {
+        const previousVotes = doc.data().votes
+        const vote = { votedBy: { id: user.uid, name: user.displayName } }
+        const updatedVotes = [...previousVotes, vote]
+        voteRef.update({ votes: updatedVotes })
+      }
+    }
+  }
+
   return (
     <LinkItemContainer>
       <LeftContainer>
         {showCount && <LinkItemIndex>{index}.</LinkItemIndex>}
-        <VoteButton>▲</VoteButton>
+        <VoteButton onClick={handleVote}>▲</VoteButton>
       </LeftContainer>
       <RightContainer>
         {link.description} <LinkURL>({getDomain(link.url)})</LinkURL>
         <VoteInfo>
-          {link.votes.lenght} votes by {link.postedBy.name}{' '}
+          {link.votes.length} votes by {link.postedBy.name}{' '}
           {distanceInWordsToNow(link.created)}
           {' | '}
           <Link to={`/link/${link.id}`}>
@@ -50,6 +69,7 @@ const VoteButton = styled.div`
   font-size: 11px;
   color: #828282;
   margin-left: 0.25rem;
+  cursor: pointer;
 `
 
 const LinkURL = styled.span`
@@ -62,4 +82,4 @@ const VoteInfo = styled.div`
   color: #828282;
 `
 
-export default LinkItem
+export default withRouter(LinkItem)
