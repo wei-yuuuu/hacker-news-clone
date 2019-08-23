@@ -10,7 +10,7 @@ const INITIAL_STATE = {
   url: ''
 }
 
-const CreateLink = props => {
+function CreateLink(props) {
   const { firebase, user } = React.useContext(FirebaseContext)
   const { handleSubmit, handleChange, values, errors } = useFormValidation(
     INITIAL_STATE,
