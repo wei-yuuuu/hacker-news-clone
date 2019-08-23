@@ -25,6 +25,20 @@ function LinkItem({ link, index, showCount, history }) {
     }
   }
 
+  const postedByAuthUser = user && user.uid === link.postedBy.id
+
+  const handleDelete = () => {
+    const linkRef = firebase.db.collection('links').doc(link.id)
+    linkRef
+      .delete()
+      .then(() => {
+        console.log(`Document with ID ${link.id} deleted`)
+      })
+      .catch(error => {
+        console.error('Error deleting document:', error)
+      })
+  }
+
   return (
     <LinkItemContainer>
       <LeftContainer>
@@ -40,6 +54,12 @@ function LinkItem({ link, index, showCount, history }) {
           <Link to={`/link/${link.id}`}>
             {link.comments.length > 0 ? `${link.comments.length}` : 'discuss'}
           </Link>
+          {postedByAuthUser && (
+            <>
+              {' | '}
+              <DeleteButton onClick={handleDelete}>delete</DeleteButton>
+            </>
+          )}
         </VoteInfo>
       </RightContainer>
     </LinkItemContainer>
@@ -80,6 +100,11 @@ const VoteInfo = styled.div`
   font-size: 0.875rem;
   line-height: 1.5;
   color: #828282;
+`
+
+const DeleteButton = styled.span`
+  color: red;
+  cursor: pointer;
 `
 
 export default withRouter(LinkItem)
