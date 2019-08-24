@@ -8,15 +8,18 @@ import { LINKS_PER_PAGE } from '../../utils/index'
 
 function LinkList(props) {
   const { firebase } = React.useContext(FirebaseContext)
+
   const [links, setLinks] = React.useState([])
   const [cursor, setCursor] = React.useState(null)
   const [totalLinks, setTotalLinks] = React.useState(0)
+  const [loading, setLoading] = React.useState(false)
 
   const isTopPage = props.location.pathname.includes('top')
   const isNewPage = props.location.pathname.includes('new')
 
   const page = Number(props.match.params.page)
   const pageIndex = page ? (page - 1) * LINKS_PER_PAGE + 1 : 0
+  const linksRef = firebase.db.collection('links')
 
   const handleSnapshot = snapshot => {
     const links = snapshot.docs.map(doc => {
@@ -42,27 +45,19 @@ function LinkList(props) {
 
   const getLinks = () => {
     const hasCursor = Boolean(cursor)
+    setLoading(true)
 
     if (isTopPage) {
-      return firebase.db
-        .collection('links')
+      return linksRef
         .orderBy('voteCount', 'desc')
         .limit(LINKS_PER_PAGE)
         .onSnapshot(handleSnapshot)
-    } else if (page === 1) {
-      return firebase.db
-        .collection('links')
-        .orderBy('created', 'desc')
-        .limit(LINKS_PER_PAGE)
-        .onSnapshot(handleSnapshot)
     }
-    // else if (hasCursor) {
-    //   return firebase.db
-    //     .collection('links')
+    // else if (page === 1) {
+    //   return linksRef
     //     .orderBy('created', 'desc')
-    //     .startAfter(cursor.created)
     //     .limit(LINKS_PER_PAGE)
-    //     .onSnapshot(handleSnapshot)
+    //     .onSnapshot(handleSnapshot, setLoading(false))
     // }
     else {
       const offset = page * LINKS_PER_PAGE - LINKS_PER_PAGE
@@ -75,6 +70,7 @@ function LinkList(props) {
           const lastLink = links[links.length - 1]
           setLinks(links)
           setCursor(lastLink)
+          setLoading(false)
         })
       return () => {}
     }
@@ -96,13 +92,12 @@ function LinkList(props) {
   }, [])
 
   React.useEffect(() => {
-    // const unsubscribe = getLinks()
-    // return () => unsubscribe()
-    getLinks()
+    const unsubscribe = getLinks()
+    return () => unsubscribe()
   }, [isTopPage, page])
 
   return (
-    <>
+    <LinksContainer loading={loading ? 0.25 : 1}>
       {links.map((link, index) => (
         <LinkItem
           key={link.id}
@@ -117,7 +112,7 @@ function LinkList(props) {
           <Pointer onClick={visitNextPage}>Next</Pointer>
         </Pagination>
       )}
-    </>
+    </LinksContainer>
   )
 }
 
@@ -136,6 +131,11 @@ const Pointer = styled.div`
   &:hover {
     cursor: pointer;
   }
+`
+
+const LinksContainer = styled.div`
+  opacity: ${props => props.loading};
+  transition-duration: 0.3s;
 `
 
 export default LinkList
