@@ -6,7 +6,8 @@ import LinkItem from './LinkItem'
 function LinkList(props) {
   const { firebase } = React.useContext(FirebaseContext)
   const [links, setLinks] = React.useState([])
-  const isNewPage = props.location.pathname.includes('new')
+  const isTopPage = props.location.pathname.includes('top')
+  // const isNewPage = props.location.pathname.includes('new')
 
   const handleSnapshot = snapshot => {
     const links = snapshot.docs.map(doc => {
@@ -18,26 +19,32 @@ function LinkList(props) {
     setLinks(links)
   }
   const getLinks = () => {
-    firebase.db
+    if (isTopPage) {
+      return firebase.db
+        .collection('links')
+        .orderBy('voteCount', 'desc')
+        .onSnapshot(handleSnapshot)
+    }
+    return firebase.db
       .collection('links')
       .orderBy('created', 'desc')
       .onSnapshot(handleSnapshot)
   }
-  const renderLinks = () => {
-    if (isNewPage) {
-      return links
-    }
-    const topLinks = [...links].sort((a, b) => b.votes.length - a.votes.length)
-    return topLinks
-  }
-
+  // const renderLinks = () => {
+  //   if (isNewPage) {
+  //     return links
+  //   }
+  //   const topLinks = [...links].sort((a, b) => b.votes.length - a.votes.length)
+  //   return topLinks
+  // }
   React.useEffect(() => {
-    getLinks()
-  }, [])
+    const unsubscribe = getLinks()
+    return () => unsubscribe()
+  }, [isTopPage])
 
   return (
     <>
-      {renderLinks().map((link, index) => (
+      {links.map((link, index) => (
         <LinkItem
           key={link.id}
           showCount={true}

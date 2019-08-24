@@ -20,7 +20,8 @@ function LinkItem({ link, index, showCount, history }) {
         const previousVotes = doc.data().votes
         const vote = { votedBy: { id: user.uid, name: user.displayName } }
         const updatedVotes = [...previousVotes, vote]
-        voteRef.update({ votes: updatedVotes })
+        const voteCount = updatedVotes.length
+        voteRef.update({ votes: updatedVotes, voteCount })
       }
     }
   }
@@ -49,7 +50,7 @@ function LinkItem({ link, index, showCount, history }) {
         <LinkDescription href={link.url}>{link.description} </LinkDescription>
         <LinkURL>({getDomain(link.url)})</LinkURL>
         <VoteInfo>
-          {link.votes.length} votes by {link.postedBy.name}{' '}
+          {link.voteCount} votes by {link.postedBy.name}{' '}
           {distanceInWordsToNow(link.created)}
           {' | '}
           <Link to={`/link/${link.id}`}>
