@@ -54,10 +54,10 @@ function LinkDetail(props) {
     <>
       <LinkItem showCount={false} link={link} />
       <textarea
-        row="6"
-        cols="60"
+        onChange={event => setCommentText(event.target.value)}
         value={commentText}
-        onChange={e => setCommentText(e.target.value)}
+        rows="10"
+        cols="60"
       />
       <AddCommentButton onClick={handleAddComment}>
         Add Comment
@@ -86,10 +86,16 @@ const AddCommentButton = styled.button`
   border-color: buttonface;
   cursor: pointer;
   max-width: 250px;
+  display: block;
+  margin-top: 0.5rem;
 `
 
 const CommentAuthor = styled.p`
   color: #828282;
+`
+
+const Container = styled(LinkItem)`
+  display: block;
 `
 
 export default LinkDetail
