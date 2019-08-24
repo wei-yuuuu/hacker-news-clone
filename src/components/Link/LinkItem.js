@@ -7,10 +7,9 @@ import { getDomain } from '../../utils'
 import FirebaseContext from '../../firebase/context'
 import { getLinks } from './LinkList'
 
-function LinkItem({ link, index, showCount, history, match }) {
+function LinkItem({ link, index, showCount, history }) {
   const { firebase, user } = React.useContext(FirebaseContext)
-
-  const page = Number(match.params.page)
+  const useForceUpdate = React.useState()[1]
 
   async function handleVote() {
     if (!user) {
@@ -25,8 +24,8 @@ function LinkItem({ link, index, showCount, history, match }) {
         const updatedVotes = [...previousVotes, vote]
         const voteCount = updatedVotes.length
         voteRef.update({ votes: updatedVotes, voteCount })
+        useForceUpdate()
       }
-      history.push(`/new/${page}`)
     }
   }
 

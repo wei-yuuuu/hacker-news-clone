@@ -117,7 +117,7 @@ function LinkList(props) {
 }
 
 const Pagination = styled.div`
-  margin-top: 1rem;
+  margin-top: 1re;
   margin-bottom: 1rem;
   margin-left: 2rem;
   color: #000;
