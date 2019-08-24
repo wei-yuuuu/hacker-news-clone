@@ -7,9 +7,12 @@ import LinkItem from '../Link/LinkItem'
 
 function LinkDetail(props) {
   const linkId = props.match.params.linkId
+
   const [link, setLink] = React.useState(null)
   const [commentText, setCommentText] = React.useState('')
   const { firebase, user } = React.useContext(FirebaseContext)
+
+  const linkRef = firebase.db.collection('links').doc(linkId)
 
   async function handleAddComment() {
     if (!user) {
@@ -17,19 +20,17 @@ function LinkDetail(props) {
     }
     if (!commentText) return
 
-    const linkRef = firebase.db.collection('links').doc(linkId)
     const doc = await linkRef.get()
 
     if (doc.exists) {
       const previousComments = doc.data().comments
       const comment = {
-        postedBy: { id: user.uid, name: user.displayname },
+        postedBy: { id: user.uid, name: user.displayName },
         created: Date.now(),
         text: commentText
       }
       const updatedComments = [...previousComments, comment]
-      console.log(updatedComments)
-      // linkRef.update({ comments: updatedComments })
+      linkRef.update({ comments: updatedComments })
       setLink(prevState => ({
         ...prevState,
         comments: updatedComments
@@ -39,7 +40,6 @@ function LinkDetail(props) {
   }
 
   async function getLink() {
-    const linkRef = firebase.db.collection('links').doc(linkId)
     const doc = await linkRef.get()
     setLink({ ...doc.data(), id: doc.id })
   }
