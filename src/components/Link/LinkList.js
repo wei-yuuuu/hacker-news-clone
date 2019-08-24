@@ -55,14 +55,16 @@ function LinkList(props) {
         .orderBy('created', 'desc')
         .limit(LINKS_PER_PAGE)
         .onSnapshot(handleSnapshot)
-    } else if (hasCursor) {
-      return firebase.db
-        .collection('links')
-        .orderBy('created', 'desc')
-        .startAfter(cursor.created)
-        .limit(LINKS_PER_PAGE)
-        .onSnapshot(handleSnapshot)
-    } else {
+    }
+    // else if (hasCursor) {
+    //   return firebase.db
+    //     .collection('links')
+    //     .orderBy('created', 'desc')
+    //     .startAfter(cursor.created)
+    //     .limit(LINKS_PER_PAGE)
+    //     .onSnapshot(handleSnapshot)
+    // }
+    else {
       const offset = page * LINKS_PER_PAGE - LINKS_PER_PAGE
       axios
         .get(
@@ -94,8 +96,9 @@ function LinkList(props) {
   }, [])
 
   React.useEffect(() => {
-    const unsubscribe = getLinks()
-    return () => unsubscribe()
+    // const unsubscribe = getLinks()
+    // return () => unsubscribe()
+    getLinks()
   }, [isTopPage, page])
 
   return (
