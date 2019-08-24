@@ -69,7 +69,7 @@ function LinkList(props) {
           `https://us-central1-hacker-news-clone-d96d7.cloudfunctions.net/linkPagination?offset=${offset}`
         )
         .then(response => {
-          const links = response.data.length
+          const links = response.data
           const lastLink = links[links.length - 1]
           setLinks(links)
           setCursor(lastLink)
