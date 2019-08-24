@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
 
 import LinkItem from './LinkItem'
 import FirebaseContext from '../../firebase/context'
@@ -9,6 +10,7 @@ function LinkList(props) {
   const { firebase } = React.useContext(FirebaseContext)
   const [links, setLinks] = React.useState([])
   const [cursor, setCursor] = React.useState(null)
+  const [totalLinks, setTotalLinks] = React.useState(0)
 
   const isTopPage = props.location.pathname.includes('top')
   const isNewPage = props.location.pathname.includes('new')
@@ -27,6 +29,17 @@ function LinkList(props) {
     setLinks(links)
     setCursor(LastLink)
   }
+
+  const getTotalLinks = () => {
+    axios
+      .get(
+        'https://us-central1-hacker-news-clone-d96d7.cloudfunctions.net/getTotalLinks'
+      )
+      .then(response => {
+        setTotalLinks(response.data.length)
+      })
+  }
+
   const getLinks = () => {
     const hasCursor = Boolean(cursor)
 
@@ -49,6 +62,19 @@ function LinkList(props) {
         .startAfter(cursor.created)
         .limit(LINKS_PER_PAGE)
         .onSnapshot(handleSnapshot)
+    } else {
+      const offset = page * LINKS_PER_PAGE - LINKS_PER_PAGE
+      axios
+        .get(
+          `https://us-central1-hacker-news-clone-d96d7.cloudfunctions.net/linkPagination?offset=${offset}`
+        )
+        .then(response => {
+          const links = response.data.length
+          const lastLink = links[links.length - 1]
+          setLinks(links)
+          setCursor(lastLink)
+        })
+      return () => {}
     }
   }
 
@@ -58,15 +84,19 @@ function LinkList(props) {
     }
   }
   const visitNextPage = () => {
-    if (page <= links.length / LINKS_PER_PAGE) {
+    if (page <= totalLinks / LINKS_PER_PAGE) {
       props.history.push(`/new/${page + 1}`)
     }
   }
 
   React.useEffect(() => {
+    getTotalLinks()
+  }, [])
+
+  React.useEffect(() => {
     const unsubscribe = getLinks()
     return () => unsubscribe()
-  }, [isTopPage, page, pageIndex])
+  }, [isTopPage, page])
 
   return (
     <>
