@@ -94,36 +94,6 @@ input {
   text-decoration: none;
 }
 
-@media screen and (max-width: 500px) {
-  .flex {
-    display: block;
-  }
-  .flex .logo {
-    margin-top: 7px;
-  }
-  .container {
-    position: relative;
-    margin-left: 24px;
-    margin-top: -0.9rem;
-  }
-  .divider {
-    display: inline-block;
-  }
-  .login {
-    margin-top: 1rem;
-  }
-  .header-title {
-    position: absolute;
-    margin-left: 0.25rem;
-  }
-}
-
-@media screen and (max-width: 350px) {
-  .divider {
-    display: none;
-  }
-}
-
 .divider {
   margin-left: 0.25rem;
   color: black;

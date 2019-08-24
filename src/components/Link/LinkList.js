@@ -51,13 +51,13 @@ function LinkList(props) {
       return linksRef
         .orderBy('voteCount', 'desc')
         .limit(LINKS_PER_PAGE)
-        .onSnapshot(handleSnapshot)
+        .onSnapshot(handleSnapshot, setLoading(false))
     }
     // else if (page === 1) {
     //   return linksRef
-    //     .orderBy('created', 'desc')
+    //     .orderby('created', 'desc')
     //     .limit(LINKS_PER_PAGE)
-    //     .onSnapshot(handleSnapshot, setLoading(false))
+    //     .onsnapshot(handleSnapshot, setLoading(false))
     // }
     else {
       const offset = page * LINKS_PER_PAGE - LINKS_PER_PAGE
