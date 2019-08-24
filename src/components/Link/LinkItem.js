@@ -46,7 +46,8 @@ function LinkItem({ link, index, showCount, history }) {
         <VoteButton onClick={handleVote}>▲</VoteButton>
       </LeftContainer>
       <RightContainer>
-        {link.description} <LinkURL>({getDomain(link.url)})</LinkURL>
+        <LinkDescription href={link.url}>{link.description} </LinkDescription>
+        <LinkURL>({getDomain(link.url)})</LinkURL>
         <VoteInfo>
           {link.votes.length} votes by {link.postedBy.name}{' '}
           {distanceInWordsToNow(link.created)}
@@ -83,6 +84,11 @@ const RightContainer = styled.div`
 
 const LinkItemIndex = styled.span`
   color: #828282;
+`
+
+const LinkDescription = styled.a`
+  text-decoration: none;
+  color: black;
 `
 
 const VoteButton = styled.div`
