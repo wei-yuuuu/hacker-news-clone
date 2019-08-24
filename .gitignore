@@ -4,5 +4,9 @@
 # dependencies
 /node_modules
 
+# firebase
+.firebaserc
+firebase.json
+
 # misc
 .DS_Store
