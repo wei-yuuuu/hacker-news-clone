@@ -30,7 +30,7 @@ function LinkList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTopPage, page])
 
-  function getLinks() {
+  const getLinks = () => {
     const hasCursor = Boolean(cursor)
     setLoading(true)
 
@@ -77,7 +77,7 @@ function LinkList(props) {
       })
   }
 
-  function handleSnapshot(snapshot) {
+  const handleSnapshot = snapshot => {
     const links = snapshot.docs.map(doc => {
       return { id: doc.id, ...doc.data() }
     })
