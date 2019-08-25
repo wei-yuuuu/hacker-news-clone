@@ -46,7 +46,7 @@ function LinkDetail(props) {
 
   React.useEffect(() => {
     getLink()
-  }, [])
+  }, [getLink])
 
   return !link ? (
     <div>Loading...</div>
@@ -92,10 +92,6 @@ const AddCommentButton = styled.button`
 
 const CommentAuthor = styled.p`
   color: #828282;
-`
-
-const Container = styled(LinkItem)`
-  display: block;
 `
 
 export default LinkDetail

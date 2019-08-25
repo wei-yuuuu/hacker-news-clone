@@ -5,11 +5,9 @@ import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 
 import { getDomain } from '../../utils'
 import FirebaseContext from '../../firebase/context'
-import { getLinks } from './LinkList'
 
 function LinkItem({ link, index, showCount, history }) {
   const { firebase, user } = React.useContext(FirebaseContext)
-  const useForceUpdate = React.useState()[1]
 
   async function handleVote() {
     if (!user) {
@@ -24,7 +22,6 @@ function LinkItem({ link, index, showCount, history }) {
         const updatedVotes = [...previousVotes, vote]
         const voteCount = updatedVotes.length
         voteRef.update({ votes: updatedVotes, voteCount })
-        useForceUpdate()
       }
     }
   }
